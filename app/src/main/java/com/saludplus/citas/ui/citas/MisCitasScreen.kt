@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.saludplus.citas.navigation.Rutas
 import com.saludplus.citas.repository.Repositorio
 import com.saludplus.citas.ui.components.BarraNavegacion
+import com.saludplus.citas.util.fechaEnTexto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +73,7 @@ fun MisCitasScreen(onCitaClick: (Int) -> Unit, onNavegarBarra: (String) -> Unit)
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                "${cita.fecha.split("-").reversed().joinToString("/")} - ${cita.hora}",
+                                "${fechaEnTexto(cita.fecha)} - ${cita.hora}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(top = 4.dp)
                             )

@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.saludplus.citas.repository.Repositorio
 import com.saludplus.citas.ui.components.BarraSuperior
+import com.saludplus.citas.util.fechaEnTexto
+import com.saludplus.citas.util.rangoHora
 
 @Composable
 fun DetalleCitaScreen(citaId: Int, onVolver: () -> Unit, onCitaCancelada: () -> Unit) {
@@ -45,8 +47,8 @@ fun DetalleCitaScreen(citaId: Int, onVolver: () -> Unit, onCitaCancelada: () -> 
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text("Especialidad: ${especialidad?.nombre ?: "-"}", style = MaterialTheme.typography.bodyLarge)
                         Text("Médico: ${medico?.nombre ?: "-"}", style = MaterialTheme.typography.bodyLarge)
-                        Text("Fecha: ${cita.fecha.split("-").reversed().joinToString("/")}", style = MaterialTheme.typography.bodyLarge)
-                        Text("Hora: ${cita.hora}", style = MaterialTheme.typography.bodyLarge)
+                        Text("Fecha: ${fechaEnTexto(cita.fecha)}", style = MaterialTheme.typography.bodyLarge)
+                        Text("Hora: ${rangoHora(cita.hora)}", style = MaterialTheme.typography.bodyLarge)
                     }
                 }
                 Button(

@@ -16,12 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.saludplus.citas.repository.Repositorio
 import com.saludplus.citas.ui.components.BarraSuperior
+import com.saludplus.citas.util.fechaEnTexto
 
 @Composable
 fun NotificacionesScreen(onVolver: () -> Unit) {
     val mensajes = Repositorio.citasDelUsuario().map { cita ->
         val medico = Repositorio.obtenerMedico(cita.medicoId)?.nombre ?: "tu médico"
-        val fecha = cita.fecha.split("-").reversed().joinToString("/")
+        val fecha = fechaEnTexto(cita.fecha)
         "Recuerda tu cita con $medico el $fecha a las ${cita.hora}"
     }
 

@@ -135,7 +135,7 @@ object Repositorio {
         return citas.find { it.id == id }
     }
 
-    fun agendarCita(medicoId: Int, fecha: String, hora: String): Boolean {
+    fun agendarCita(medicoId: Int, fecha: String, hora: String, motivo: String = ""): Boolean {
         val usuario = usuarioActual ?: return false
         val medico = obtenerMedico(medicoId) ?: return false
         if (hora !in horariosDisponibles(medicoId, fecha)) return false
@@ -147,7 +147,8 @@ object Repositorio {
                 medicoId = medicoId,
                 especialidadId = medico.especialidadId,
                 fecha = fecha,
-                hora = hora
+                hora = hora,
+                motivo = motivo.trim()
             )
         )
         return true

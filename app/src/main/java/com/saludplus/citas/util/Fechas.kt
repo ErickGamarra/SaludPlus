@@ -45,3 +45,10 @@ fun fechaEnTexto(fecha: String): String {
     val f = LocalDate.parse(fecha)
     return "${diasSemana[f.dayOfWeek.ordinal]} ${f.dayOfMonth} de ${meses[f.monthValue - 1].lowercase()} ${f.year}"
 }
+
+fun rangoHora(hora: String): String {
+    val inicio = hora.substringBefore(":").toInt()
+    return "$hora a %02d:%s".format(inicio + 1, hora.substringAfter(":"))
+}
+
+fun nombreDiaCorto(fecha: LocalDate) = diasSemana[fecha.dayOfWeek.ordinal].take(3)

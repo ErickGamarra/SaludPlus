@@ -39,3 +39,19 @@
 **Respuesta (resumen):** Se reescribieron ambas pantallas, se agrego `Repositorio.disponibleHoy(medicoId)` apoyado en `horariosDisponibles` con la fecha de hoy y se dibujaron dos avatares vectoriales (`avatar_medica.xml`, `avatar_medico.xml`) elegidos segun el "Dra."/"Dr." del nombre.
 
 **Correcciones:** El diseno muestra la cantidad de resenas "(124)", pero el modelo `Medico` no la tiene; se mostraron los anios de experiencia en su lugar para no inventar datos. El icono de busqueda de la barra superior del diseno se reemplazo por el campo de busqueda siempre visible, que cumple lo mismo y se ve mejor. En el avatar femenino el flequillo dejo una franja clara parecida a una diadema.
+
+## Paso 2 - Fecha en espanol y rango de hora
+
+**Prompt:** En `ConfirmarCitaScreen` la fecha sale como dd/MM/yyyy. Muestrala como "Martes 16 de setiembre 2026" usando `LocalDate`, con nombres en espanol escritos en el codigo (sin `Locale` del sistema), y la hora como rango ("09:00 a 10:00"). Reutiliza `fechaEnTexto` y aplicala tambien en Mis citas, Detalle y Notificaciones para que sea coherente.
+
+**Respuesta (resumen):** Se agrego `rangoHora` en `util/Fechas.kt` y se reemplazo el formato dd/MM/yyyy por `fechaEnTexto` en Confirmar, Detalle, Mis citas y Notificaciones.
+
+**Correcciones:** `rangoHora` supone que cada cita dura una hora, igual que los horarios base del Repositorio. Resultados se dejo con dd/MM/yyyy a proposito, porque no es una cita.
+
+## Paso 7 - Fecha y hora, y Confirmar
+
+**Prompt:** Con el tema y los componentes de los pasos anteriores, rediseña Fecha y hora y Confirmar segun la figura. Fecha y hora: tarjeta del medico con avatar, flechas de semana y mes, dias como mosaicos con el dia de la semana y el numero, horas en 3 columnas con `LazyVerticalGrid` y boton "Continuar". Confirmar: tarjeta del medico, filas con icono (fecha larga, hora, tipo de atencion, direccion), campo "Motivo de consulta (opcional)" y boton "Agendar cita". Guarda el motivo en la cita. Mantener el bloqueo de horarios reservados, que "Continuar" solo se habilite con dia y hora, y el `popUpTo`.
+
+**Respuesta (resumen):** Se reescribieron ambas pantallas con un mosaico reutilizable (`Mosaico`) para dias y horas, se agrego `motivo` al modelo `Cita` y un parametro `motivo` a `agendarCita`.
+
+**Correcciones:** Los 5 dias caben en una fila, asi que se usaron mosaicos con `weight` en vez de un `LazyRow`. El diseno muestra el "CMP" del medico, que no existe en el modelo, y se omitio. El tipo de atencion y la direccion son textos fijos de la clinica. `motivo` se agrego con valor por defecto para no romper las llamadas existentes.
