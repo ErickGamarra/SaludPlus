@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.saludplus.citas.repository.Repositorio
 import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.BotonPrimario
+import com.saludplus.citas.ui.components.CabeceraMedico
 import com.saludplus.citas.ui.components.avatarDe
 import com.saludplus.citas.util.diasHabiles
 import com.saludplus.citas.util.mesYAnio
@@ -77,33 +78,7 @@ fun FechaHoraScreen(medicoId: Int, onContinuar: (fecha: String, hora: String) ->
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-            if (medico != null) {
-                Surface(shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(avatarDe(medico)),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(56.dp)
-                                .clip(CircleShape)
-                        )
-                        Column(modifier = Modifier.padding(start = 12.dp)) {
-                            Text(medico.nombre, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                            Text(
-                                especialidad?.nombre ?: "",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-            }
+            if (medico != null) CabeceraMedico(medico, especialidad?.nombre ?: "")
 
             Row(
                 modifier = Modifier

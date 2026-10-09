@@ -39,23 +39,14 @@ import androidx.compose.ui.unit.dp
 import com.saludplus.citas.repository.Repositorio
 import com.saludplus.citas.ui.components.BarraSuperior
 import com.saludplus.citas.ui.components.BotonPrimario
+import com.saludplus.citas.ui.components.CabeceraMedico
+import com.saludplus.citas.ui.components.FilaDato
 import com.saludplus.citas.ui.components.IconoCirculo
 import com.saludplus.citas.ui.components.avatarDe
 import com.saludplus.citas.ui.theme.AzulClaro
 import com.saludplus.citas.ui.theme.AzulSalud
 import com.saludplus.citas.util.fechaEnTexto
 import com.saludplus.citas.util.rangoHora
-
-@Composable
-private fun FilaDato(icono: ImageVector, titulo: String, valor: String) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-        IconoCirculo(icono, AzulClaro, AzulSalud)
-        Column(modifier = Modifier.padding(start = 12.dp)) {
-            Text(titulo, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(valor, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
-        }
-    }
-}
 
 @Composable
 fun ConfirmarCitaScreen(medicoId: Int, fecha: String, hora: String, onCitaAgendada: () -> Unit, onVolver: () -> Unit) {
@@ -73,33 +64,7 @@ fun ConfirmarCitaScreen(medicoId: Int, fecha: String, hora: String, onCitaAgenda
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            if (medico != null) {
-                Surface(shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(avatarDe(medico)),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(56.dp)
-                                .clip(CircleShape)
-                        )
-                        Column(modifier = Modifier.padding(start = 12.dp)) {
-                            Text(medico.nombre, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                            Text(
-                                especialidad?.nombre ?: "",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-            }
+            if (medico != null) CabeceraMedico(medico, especialidad?.nombre ?: "")
 
             FilaDato(Icons.Filled.CalendarMonth, "Fecha", fechaEnTexto(fecha))
             FilaDato(Icons.Filled.Schedule, "Hora", rangoHora(hora))

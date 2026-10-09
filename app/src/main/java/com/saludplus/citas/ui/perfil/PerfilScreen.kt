@@ -1,80 +1,121 @@
 package com.saludplus.citas.ui.perfil
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.saludplus.citas.navigation.Rutas
 import com.saludplus.citas.repository.Repositorio
 import com.saludplus.citas.ui.components.BarraNavegacion
+import com.saludplus.citas.ui.components.FilaDato
+import com.saludplus.citas.ui.components.TituloPantalla
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(onCerrarSesion: () -> Unit, onNavegarBarra: (String) -> Unit) {
     val usuario = Repositorio.usuarioActual
+    val iniciales = usuario?.nombre
+        ?.split(" ")
+        ?.filter { it.isNotBlank() }
+        ?.take(2)
+        ?.joinToString("") { it.first().uppercase() }
+        ?: "?"
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Perfil") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                )
-            )
-        },
+        topBar = { TituloPantalla("Perfil") },
         bottomBar = { BarraNavegacion(Rutas.PERFIL, onNavegarBarra) }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                Icons.Filled.AccountCircle,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(96.dp)
+            Box(
+                modifier = Modifier
+                    .size(104.dp)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    iniciales,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+            Text(
+                usuario?.nombre ?: "-",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 16.dp)
             )
-            Text(usuario?.nombre ?: "-", style = MaterialTheme.typography.titleLarge)
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Correo: ${usuario?.correo ?: "-"}", style = MaterialTheme.typography.bodyLarge)
-                    Text("Teléfono: ${usuario?.telefono ?: "-"}", style = MaterialTheme.typography.bodyLarge)
-                    Text("Citas agendadas: ${Repositorio.citasDelUsuario().size}", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                "Paciente",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    FilaDato(Icons.Filled.Email, "Correo", usuario?.correo ?: "-")
+                    HorizontalDivider()
+                    FilaDato(Icons.Filled.Phone, "Teléfono", usuario?.telefono ?: "-")
+                    HorizontalDivider()
+                    FilaDato(Icons.Filled.Event, "Citas agendadas", Repositorio.citasDelUsuario().size.toString())
                 }
             }
-            Button(
+
+            OutlinedButton(
                 onClick = {
                     Repositorio.cerrarSesion()
                     onCerrarSesion()
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                modifier = Modifier.fillMaxWidth()
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp)
+                    .height(52.dp)
             ) {
-                Text("Cerrar sesión")
+                Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null, modifier = Modifier.size(20.dp))
+                Text("Cerrar sesión", modifier = Modifier.padding(start = 8.dp))
             }
+            androidx.compose.foundation.layout.Spacer(Modifier.height(16.dp))
         }
     }
 }

@@ -55,3 +55,21 @@
 **Respuesta (resumen):** Se reescribieron ambas pantallas con un mosaico reutilizable (`Mosaico`) para dias y horas, se agrego `motivo` al modelo `Cita` y un parametro `motivo` a `agendarCita`.
 
 **Correcciones:** Los 5 dias caben en una fila, asi que se usaron mosaicos con `weight` en vez de un `LazyRow`. El diseno muestra el "CMP" del medico, que no existe en el modelo, y se omitio. El tipo de atencion y la direccion son textos fijos de la clinica. `motivo` se agrego con valor por defecto para no romper las llamadas existentes.
+
+## Paso 8 - Cita agendada, Mis citas, Perfil, Detalle y retos
+
+**Prompt:** Las vistas que no estan dibujadas en el documento (Login, Cita agendada, Mis citas, Perfil) se disenan con el mismo estilo: tarjetas suaves, iconos en circulos de color, botones azules y barra superior con flecha. Cita agendada con un resumen de la cita recien creada; Mis citas con una tarjeta por cita (avatar, medico, especialidad, fecha y hora) y mensaje de lista vacia; Perfil con avatar y datos de la sesion; Detalle de cita con los mismos datos de Confirmar, el motivo de consulta si existe y la cancelacion con `AlertDialog`; y Resultados, Notificaciones y Terminos con el mismo lenguaje visual. Reutiliza componentes en lugar de repetir codigo.
+
+**Respuesta (resumen):** Se agregaron `TituloPantalla`, `FilaDato` (antes privada en Confirmar), `CabeceraMedico` y `TarjetaCita`, y las pantallas se reescribieron con ellos. Cita agendada lee la ultima cita del usuario para mostrar el resumen.
+
+**Correcciones:** `FilaDato` y la tarjeta del medico estaban duplicadas en Fecha y hora y Confirmar; se extrajeron a componentes compartidos y se reemplazaron esas copias. Las pestañas de la barra inferior (Mis citas, Resultados, Perfil) no tienen flecha de volver, por lo que usan un titulo simple en lugar de `BarraSuperior`. Terminos y Login no necesitaron cambios propios porque ya usan `BarraSuperior` y `CampoTexto`, que cambiaron en el paso 3. Tras revisar la app en el celular se corrigieron tres detalles: las 3 especialidades destacadas del Inicio sobrepasaban el ancho de la pantalla y se veian corridas a la derecha (ahora se reparten el ancho disponible con `BoxWithConstraints`), el texto de "sin citas" y "sin notificaciones" quedaba pegado a la izquierda (se creo `EstadoVacio`, centrado, con icono y una linea de ayuda) y el Perfil se rehizo con avatar de iniciales, tarjeta de datos con divisores y boton de cerrar sesion con icono.
+
+## Resumen de la Fase 2
+
+| Commit | Contenido |
+|---|---|
+| 1 | Calendario dinamico con `LocalDate` y navegacion por semanas |
+| 2 | Tema, componentes base, Splash, Registro y Login (pasos 3 y 4) |
+| 3 | Inicio, Especialidades y Medicos (pasos 5 y 6) |
+| 4 | Fecha y hora y Confirmar, con fecha en espanol (pasos 2 y 7) |
+| 5 | Cita agendada, Mis citas, Perfil, Detalle y retos (paso 8) |

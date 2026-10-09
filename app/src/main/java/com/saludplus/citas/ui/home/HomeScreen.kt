@@ -1,12 +1,14 @@
 package com.saludplus.citas.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -100,12 +102,17 @@ fun HomeScreen(
                 Text("Especialidades destacadas", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 TextButton(onClick = onAgendarCita) { Text("Ver todas") }
             }
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(destacadas) { especialidad ->
-                    TarjetaEspecialidad(
-                        especialidad = especialidad,
-                        onClick = { onEspecialidadClick(especialidad.id) }
-                    )
+            BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                val separacion = 12.dp
+                val ancho = ((maxWidth - separacion * (destacadas.size - 1)) / destacadas.size).coerceAtLeast(96.dp)
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(separacion, Alignment.CenterHorizontally)) {
+                    items(destacadas) { especialidad ->
+                        TarjetaEspecialidad(
+                            especialidad = especialidad,
+                            onClick = { onEspecialidadClick(especialidad.id) },
+                            modifier = Modifier.width(ancho)
+                        )
+                    }
                 }
             }
         }
