@@ -2,6 +2,7 @@ package com.saludplus.citas.ui.agendamiento
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,8 +11,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,22 +26,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.saludplus.citas.repository.Repositorio
 import com.saludplus.citas.ui.components.BarraSuperior
-
-private val diasFijos = listOf(
-    "Vie 9" to "2026-10-09",
-    "Lun 12" to "2026-10-12",
-    "Mar 13" to "2026-10-13",
-    "Mié 14" to "2026-10-14",
-    "Jue 15" to "2026-10-15"
-)
+import com.saludplus.citas.util.diasHabiles
+import com.saludplus.citas.util.etiquetaDia
+import com.saludplus.citas.util.mesYAnio
 
 @Composable
 fun FechaHoraScreen(medicoId: Int, onContinuar: (fecha: String, hora: String) -> Unit, onVolver: () -> Unit) {
     val medico = Repositorio.obtenerMedico(medicoId)
+    var semana by remember { mutableStateOf(0) }
+    val dias = diasHabiles(semana)
     var fecha by remember { mutableStateOf<String?>(null) }
     var hora by remember { mutableStateOf<String?>(null) }
     val horarios = fecha?.let { Repositorio.horariosDisponibles(medicoId, it) } ?: emptyList()
@@ -48,20 +52,46 @@ fun FechaHoraScreen(medicoId: Int, onContinuar: (fecha: String, hora: String) ->
                 .padding(16.dp)
         ) {
             Text(medico?.nombre ?: "", style = MaterialTheme.typography.titleLarge)
-            Text("Octubre 2026", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = 16.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                IconButton(
+                    onClick = {
+                        semana--
+                        fecha = null
+                        hora = null
+                    },
+                    enabled = semana > 0
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Semana anterior")
+                }
+                Text(mesYAnio(dias), style = MaterialTheme.typography.titleMedium)
+                IconButton(onClick = {
+                    semana++
+                    fecha = null
+                    hora = null
+                }) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Semana siguiente")
+                }
+            }
 
             LazyRow(
                 modifier = Modifier.padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(diasFijos) { (etiqueta, valor) ->
+                items(dias) { dia ->
                     FilterChip(
-                        selected = valor == fecha,
+                        selected = dia.toString() == fecha,
                         onClick = {
-                            fecha = valor
+                            fecha = dia.toString()
                             hora = null
                         },
-                        label = { Text(etiqueta) }
+                        label = { Text(etiquetaDia(dia)) }
                     )
                 }
             }
