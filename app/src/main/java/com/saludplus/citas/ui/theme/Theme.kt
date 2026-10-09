@@ -12,8 +12,9 @@ private val EsquemaClaro = lightColorScheme(
     onPrimaryContainer = AzulSaludOscuro,
     secondary = VerdeExito,
     error = RojoError,
-    background = GrisFondo,
+    background = Color.White,
     surface = Color.White,
+    surfaceVariant = GrisCampo,
     onSurfaceVariant = GrisTexto
 )
 

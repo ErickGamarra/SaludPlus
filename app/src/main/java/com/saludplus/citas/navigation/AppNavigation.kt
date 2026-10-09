@@ -48,7 +48,10 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
                     navController.navigate(Rutas.HOME) { popUpTo(Rutas.SPLASH) { inclusive = true } }
                 },
                 onVerTerminos = { navController.navigate(Rutas.TERMINOS) },
-                onVolver = { navController.popBackStack() }
+                onVolver = { navController.popBackStack() },
+                onIrALogin = {
+                    navController.navigate(Rutas.LOGIN) { popUpTo(Rutas.REGISTRO) { inclusive = true } }
+                }
             )
         }
         composable(Rutas.LOGIN) {
@@ -56,7 +59,10 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
                 onLoginExitoso = {
                     navController.navigate(Rutas.HOME) { popUpTo(Rutas.SPLASH) { inclusive = true } }
                 },
-                onVolver = { navController.popBackStack() }
+                onVolver = { navController.popBackStack() },
+                onIrARegistro = {
+                    navController.navigate(Rutas.REGISTRO) { popUpTo(Rutas.LOGIN) { inclusive = true } }
+                }
             )
         }
         composable(Rutas.TERMINOS) {

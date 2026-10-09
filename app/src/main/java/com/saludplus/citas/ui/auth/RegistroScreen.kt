@@ -3,11 +3,17 @@ package com.saludplus.citas.ui.auth
 import android.util.Patterns
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,15 +23,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.saludplus.citas.repository.Repositorio
 import com.saludplus.citas.ui.components.BarraSuperior
+import com.saludplus.citas.ui.components.BotonPrimario
 import com.saludplus.citas.ui.components.CampoTexto
 
 @Composable
-fun RegistroScreen(onRegistroExitoso: () -> Unit, onVerTerminos: () -> Unit, onVolver: () -> Unit) {
+fun RegistroScreen(
+    onRegistroExitoso: () -> Unit,
+    onVerTerminos: () -> Unit,
+    onVolver: () -> Unit,
+    onIrALogin: () -> Unit
+) {
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var telefono by remember { mutableStateOf("") }
@@ -43,26 +56,35 @@ fun RegistroScreen(onRegistroExitoso: () -> Unit, onVerTerminos: () -> Unit, onV
     val errorTelefono = if (intentado && !telefonoValido) "El teléfono debe tener 9 dígitos" else null
     val errorContrasena = if (intentado && !contrasenaValida) "Mínimo 6 caracteres" else null
 
-    Scaffold(
-        topBar = { BarraSuperior("Crear cuenta", onVolver) }
-    ) { padding ->
+    Scaffold(topBar = { BarraSuperior("Crear cuenta", onVolver) }) { padding ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            CampoTexto(nombre, { nombre = it }, "Nombre completo", errorNombre)
-            CampoTexto(correo, { correo = it; errorRegistro = null }, "Correo", errorCorreo, tipoTeclado = KeyboardType.Email)
-            CampoTexto(telefono, { telefono = it }, "Teléfono", errorTelefono, tipoTeclado = KeyboardType.Phone)
-            CampoTexto(contrasena, { contrasena = it }, "Contraseña", errorContrasena, esContrasena = true)
+            Text(
+                "Regístrate para agendar tus citas",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+            CampoTexto(nombre, { nombre = it }, "Nombre completo", errorNombre, icono = Icons.Filled.Person)
+            CampoTexto(telefono, { telefono = it }, "Teléfono", errorTelefono, tipoTeclado = KeyboardType.Phone, icono = Icons.Filled.Phone)
+            CampoTexto(correo, { correo = it; errorRegistro = null }, "Correo", errorCorreo, tipoTeclado = KeyboardType.Email, icono = Icons.Filled.Email)
+            CampoTexto(contrasena, { contrasena = it }, "Contraseña", errorContrasena, esContrasena = true, icono = Icons.Filled.Lock)
 
             if (errorRegistro != null) {
                 Text(errorRegistro!!, color = MaterialTheme.colorScheme.error)
             }
 
-            Button(
+            BotonPrimario(
+                texto = "Registrarme",
                 onClick = {
                     intentado = true
                     val valido = nombreValido && correoValido && telefonoValido && contrasenaValida
@@ -74,13 +96,28 @@ fun RegistroScreen(onRegistroExitoso: () -> Unit, onVerTerminos: () -> Unit, onV
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Registrarse")
-            }
+                modifier = Modifier.padding(top = 8.dp)
+            )
 
+            Text(
+                "Al registrarte aceptas nuestros",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
             TextButton(onClick = onVerTerminos, modifier = Modifier.fillMaxWidth()) {
-                Text("Ver términos y condiciones")
+                Text("Términos y Condiciones")
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("¿Ya tienes cuenta?", style = MaterialTheme.typography.bodyMedium)
+                TextButton(onClick = onIrALogin) { Text("Iniciar sesión") }
             }
         }
     }
