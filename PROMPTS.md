@@ -23,3 +23,19 @@
 **Respuesta (resumen):** Se reescribieron las tres pantallas con los componentes nuevos, manteniendo las validaciones de Registro (nombre, correo, telefono de 9 digitos, contrasena de 6 o mas) y los errores de Login.
 
 **Correcciones:** El diseno pide los enlaces "Iniciar sesion" en Registro y "Registrate" en Login, que no existian como parametros, asi que se agregaron `onIrALogin` y `onIrARegistro` y se conectaron en `AppNavigation` con `popUpTo` para no apilar pantallas. El proyecto no tenia imagenes: la ilustracion del doctor y el logo se dibujaron como vectores XML (`ilustracion_doctor.xml`, `logo_saludplus.xml`) en vez de usar un icono de Material. En la primera version el doctor quedaba con mucho espacio vacio arriba y se recorto el lienzo con un `group` y `translateY`. Se reviso el resultado renderizando los mismos trazos como SVG antes de integrarlos.
+
+## Paso 5 - Inicio
+
+**Prompt:** Con el tema y los componentes del paso 3, rediseña `HomeScreen` segun la figura: saludo "¡Hola, {nombre}!" con la campana a la derecha sobre fondo claro, cuadricula 2x2 de tarjetas de colores (Agendar cita, Mis citas, Mis datos y Resultados, cada una a su destino), "Especialidades destacadas" con el enlace "Ver todas" que lleva a Especialidades y una fila horizontal de tarjetas con icono. Mantener la barra inferior con 4 destinos y el `LazyRow`.
+
+**Respuesta (resumen):** Se quito la barra superior azul y se armo el encabezado con saludo y campana. `TarjetaAcceso` recibio colores de fondo y de icono, y `TarjetaEspecialidad` paso a tener icono en circulo. Se agrego `estiloEspecialidad(id)` con un icono y color por especialidad.
+
+**Correcciones:** Al no haber `topBar`, el contenido quedaba bajo la barra de estado, y se agrego `statusBarsPadding()`. El cambio de firma de `TarjetaAcceso` obligo a actualizar sus llamadas en Home.
+
+## Paso 6 - Especialidades y Medicos
+
+**Prompt:** Rediseña ambas segun la figura. Especialidades: buscador redondeado con icono y filas con icono en circulo de color, nombre, subtitulo y flecha `>`. Medicos: titulo "Medicos de {especialidad}", avatar, estrella con calificacion y etiqueta verde "Disponible hoy" si el medico tiene horarios libres hoy, o "Disponible esta semana" si no. Mantener la busqueda y el orden por calificacion.
+
+**Respuesta (resumen):** Se reescribieron ambas pantallas, se agrego `Repositorio.disponibleHoy(medicoId)` apoyado en `horariosDisponibles` con la fecha de hoy y se dibujaron dos avatares vectoriales (`avatar_medica.xml`, `avatar_medico.xml`) elegidos segun el "Dra."/"Dr." del nombre.
+
+**Correcciones:** El diseno muestra la cantidad de resenas "(124)", pero el modelo `Medico` no la tiene; se mostraron los anios de experiencia en su lugar para no inventar datos. El icono de busqueda de la barra superior del diseno se reemplazo por el campo de busqueda siempre visible, que cumple lo mismo y se ve mejor. En el avatar femenino el flequillo dejo una franja clara parecida a una diadema.

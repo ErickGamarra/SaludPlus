@@ -103,6 +103,10 @@ object Repositorio {
 
     // Medicos
 
+    fun disponibleHoy(medicoId: Int): Boolean {
+        return horariosDisponibles(medicoId, java.time.LocalDate.now().toString()).isNotEmpty()
+    }
+
     fun obtenerMedico(id: Int): Medico? {
         return medicos.find { it.id == id }
     }
