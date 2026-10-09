@@ -36,9 +36,9 @@ private val diasFijos = listOf(
 @Composable
 fun FechaHoraScreen(medicoId: Int, onContinuar: (fecha: String, hora: String) -> Unit, onVolver: () -> Unit) {
     val medico = Repositorio.obtenerMedico(medicoId)
-    var fecha by remember { mutableStateOf(diasFijos.first().second) }
+    var fecha by remember { mutableStateOf<String?>(null) }
     var hora by remember { mutableStateOf<String?>(null) }
-    val horarios = Repositorio.horariosDisponibles(medicoId, fecha)
+    val horarios = fecha?.let { Repositorio.horariosDisponibles(medicoId, it) } ?: emptyList()
 
     Scaffold(topBar = { BarraSuperior("Fecha y hora", onVolver) }) { padding ->
         Column(
@@ -67,7 +67,9 @@ fun FechaHoraScreen(medicoId: Int, onContinuar: (fecha: String, hora: String) ->
             }
 
             Text("Horarios disponibles", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 16.dp, bottom = 8.dp))
-            if (horarios.isEmpty()) {
+            if (fecha == null) {
+                Text("Elige un día para ver los horarios")
+            } else if (horarios.isEmpty()) {
                 Text("No hay horarios disponibles para este día")
             }
             LazyVerticalGrid(
@@ -86,8 +88,12 @@ fun FechaHoraScreen(medicoId: Int, onContinuar: (fecha: String, hora: String) ->
             }
 
             Button(
-                onClick = { hora?.let { onContinuar(fecha, it) } },
-                enabled = hora != null,
+                onClick = {
+                    val f = fecha
+                    val h = hora
+                    if (f != null && h != null) onContinuar(f, h)
+                },
+                enabled = fecha != null && hora != null,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Continuar")
